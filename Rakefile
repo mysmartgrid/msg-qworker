@@ -11,7 +11,7 @@ begin
     gem.homepage = "https://github.com/mysmartgrid/msg-qworker"
     gem.authors = ["Mathias Dalheimer"]
     gem.bindir = 'bin'
-    gem.executables = FileList["*"]
+    gem.executables = ["bin/qworker.rb", "bin/producer.rb"]
     gem.default_executable = 'qworker.rb'
     gem.files = FileList["[A-Z]*", "{lib,etc,test}/**/*"]
      
@@ -53,7 +53,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "msg-qworker #{version}"
+  rdoc.title = "flukso4r #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
