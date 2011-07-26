@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'rubygems'
 require 'json'
 require 'beanstalk-client'    # gem install beanstalk-client
@@ -34,7 +36,7 @@ end
 #   137753108f59012eaa2c549a20077664
 uuid=uuidgen.generate(format=:compact);
 payload=[
-  {'uuid' => uuid, 'type' => 'übercalc'}, 
+  {'uuid' => uuid, 'type' => 'sleep'}, 
   {'foo' => 'bar', '23' => '42'}
 ]
 json_payload=JSON.generate(payload);

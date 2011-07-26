@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'rubygems'
 require 'json'
 require 'beanstalk-client'    # gem install beanstalk-client
@@ -41,20 +43,27 @@ loop do
     # after a timeout, beanstalk puts the job back into the queue.
     puts " + time left for processing: #{job.time_left()}"
     puts " + job queue priority: #{job.pri()}"
+    
     # Be careful! Only delete the job if the algorithm was really
     # successful. This means that if you start external processes, you
     # MUST evaluate the return code. If the external process failed,
     # release the job so that it is still in the queue (and other
     # consumers can process it)
-  
     pid=0;
     begin
       timeout(job.time_left() + $GRACE_TIME) {
         pid = Process.fork
         if pid.nil? then
-          # In child: Execute the algorithm
-          #exec "/opt/local/bin/ruby /Users/md/Projects/mysmartgrid/beanstalk-mockup/drunken_sailor.rb -s #{job.time_left()} -v > /tmp/log.txt 2>&1"
-          exec "ruby", "drunken_sailor.rb", "-s", "#{job.time_left()}", "-v"
+          # In child: Execute the algorithm. Decide which program to
+          # execute here.
+          case job_type
+          when "drunken_sailor":
+            exec "ruby", "drunken_sailor.rb", "-s", "#{job.time_left()}", "-v"
+          when "sleep":
+            exec "sleep", "#{job.time_left()}"
+          else
+            puts "Unknown job type: #{job_type} - ignoring job."
+          end
         else
           # In parent
           Process.wait(pid)
