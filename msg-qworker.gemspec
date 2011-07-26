@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.default_executable = %q{qworker.rb}
   s.description = %q{This gem provides a queue worker infrastructure for a beanstalk queue. Jobs are defined within the framework.}
   s.email = %q{md@gonium.net}
-  s.executables = ["bin", "etc", "lib", "LICENSE", "msg-qworker.gemspec", "Rakefile", "README", "VERSION"]
+  s.executables = ["bin/qworker.rb", "bin/producer.rb"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README"
