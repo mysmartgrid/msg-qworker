@@ -19,7 +19,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ##
 
-# Read the flukso4r location 
+# Read the qworker location 
 libpath=File.join(File.dirname(__FILE__), '..', 'lib')
 $:.unshift << libpath 
 #puts "Using libraty path #{$:.join(":")}"

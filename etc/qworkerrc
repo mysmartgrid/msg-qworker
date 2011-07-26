@@ -1,2 +1,4 @@
 BEANSTALK_SERVER: "localhost"
 BEANSTALK_PORT: "11300"
+RESULT_BASEDIR: "/var/tmp/qworker"
+GRACE_TIME: 2
