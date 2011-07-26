@@ -11,7 +11,7 @@ begin
     gem.homepage = "https://github.com/mysmartgrid/msg-qworker"
     gem.authors = ["Mathias Dalheimer"]
     gem.bindir = 'bin'
-    gem.executables = FileList["bin/*"]
+    gem.executables = FileList["*"]
     gem.default_executable = 'qworker.rb'
     gem.files = FileList["[A-Z]*", "{lib,etc,test}/**/*"]
      
