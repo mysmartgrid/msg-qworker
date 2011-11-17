@@ -32,6 +32,7 @@ require 'beanstalk-client'    # gem install beanstalk-client
 require 'timeout'
 require 'optparse'
 require 'ostruct'
+require 'mail.rb'
 
 ###
 ## Commandline parser
@@ -150,11 +151,15 @@ loop do
           # In child: Execute the algorithm. Decide which program to
           # execute here.
           case job_type
-          when "drunken_sailor":
+          when "drunken_sailor"
             sailor_bin = File.join(File.dirname(__FILE__), "drunken_sailor.rb")
             exec "ruby", sailor_bin, "-s", "#{job.time_left()}", "-v"
-          when "sleep":
+          when "sleep"
             exec "sleep", "#{job.time_left()}"
+	  when "mail"
+            to, msg = Msg_mail::extract_mail_payload(body['payload'])
+	    Msg_mail::send_mail(to, msg)
+	    exec "true"
           else
             puts "Unknown job type: #{job_type} - ignoring job."
           end

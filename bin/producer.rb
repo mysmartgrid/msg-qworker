@@ -31,6 +31,7 @@ require 'beanstalk-client'    # gem install beanstalk-client
 require 'uuid'                # gem install uuid
 require 'optparse'
 require 'ostruct'
+require 'mail.rb'
 
 
 ###
@@ -56,8 +57,11 @@ class Optparser
       opts.on("-c", "--config FILE", "The file where the configuration lives.") do |file|
         options.config_file = file
       end
-      opts.on("-a", "--algorithm TYPE ", "The algorithm to execute, 'drunken_sailor' or 'sleep'.") do |type|
+      opts.on("-a", "--algorithm TYPE ", "The algorithm to execute, 'drunken_sailor', 'sleep' or 'mail'.") do |type|
         options.alg_type = type
+      end
+      opts.on("-p", "--payload STRING ", "Payload depending on algorithm") do |pl|
+        options.payload = pl
       end
       # Boolean switch.
       # Boolean switch.
@@ -79,7 +83,7 @@ end
 #
 options = Optparser.parse(ARGV)
 $verbose = options.verbose
-if (options.alg_type != "drunken_sailor" and options.alg_type != "sleep")
+if (options.alg_type != "drunken_sailor" and options.alg_type != "sleep" and options.alg_type != "mail")
   puts "Please provide a valid algorithm type... (-h for details)."
   exit(-1);
 end
@@ -97,6 +101,10 @@ else
   beanstalk_server=$CONFIG['BEANSTALK_SERVER']
   beanstalk_port=$CONFIG['BEANSTALK_PORT']
   puts "---" if $verbose
+end
+if (options.alg_type == "mail" and !options.payload)
+  puts "Please specify a payload for algorithm 'mail'"
+  exit(-4)
 end
 
 puts "Starting producer, connecting to #{beanstalk_server}:#{beanstalk_port}" if $verbose
@@ -130,7 +138,7 @@ end
 uuid=uuidgen.generate(format=:compact);
 payload=[
   {'uuid' => uuid, 'type' => options.alg_type}, 
-  {'foo' => 'bar', '23' => '42'}
+  {'foo' => 'bar', '23' => '42', 'payload' => options.payload}
 ]
 json_payload=JSON.generate(payload);
 puts "generated work package: #{json_payload}"
