@@ -23,57 +23,38 @@
 # Read the qworker location 
 libpath=File.join(File.dirname(__FILE__), '..', 'lib')
 $:.unshift << libpath 
-#puts "Using libraty path #{$:.join(":")}"
 
 require 'rubygems'
-require 'net/smtp'
 require 'base64'
 
 ###
-## Mailsend plug-in
+## Msg Raspberry PI image plug-in
 #
 
-class Msg_mail
+class Msg_rasp_image
 
-  # to: array of recipients
-  # msg: full message, including headers
-  def self.send_mail(to, msg)
-    Net::SMTP.start('smtp.mysmartgrid.de', 25, 'mysmartgrid.de', 'notifications@mysmartgrid.de', 'aiK6ahCh', :plain) do |smtp|
-      to.each do |recpt|
-        smtp.send_message(msg, "noreply@mysmartgrid.de", recpt)
-        puts "===== rcpto: " + recpt + "\n" 
-        puts "msg: " + msg + "\n"
-        puts "==================== ====================\n"
-      end
-    end
-  end
-
-  # string: containing information regarding email such as: recipients, subject and body
-  def self.extract_mail_payload(string)
+  # string: Make EMOS base station image
+  def self.make_image(string)
     string = Base64::decode64(string)
-    to = []
-    header = ""
-    subject = ""
-    body = ""
-    from = ""
+    id = ""
+    ip = ""
+    gateway = ""
+    netmask = ""
     string.split(/\|/).each do |item|
       tag = item.split(/::/)
       case tag[0]
-        when "Header"
-          header = tag[1]
-        when "To"
-          to.push(tag[1])
-        when "From"
-	  from = tag[1]
-        when "Subject"
-	  subject = tag[1]
-        when "Body"
-          body = tag[1]
+        when "id"
+          id = tag[1]
+        when "ip"
+          ip = tag[1]
+        when "gateway"
+	  gateway = tag[1]
+        when "netmask"
+	  netmask = tag[1]
         else
           puts "Unexptected input: " + tag[0] + " -> Ignoring"
         end
     end
-    msg = header + "\nFrom: " + from + "\nSubject: " + subject + "\n\n" + body
-    return to, msg
+    exec( "/usr/local/bin/rasp_mkimage.sh template=/var/tmpdata/raspi-image.img target=" + id + " netmask=" + netmask + " gateway=" + gateway + " ip=" + ip + " &" )
   end
 end

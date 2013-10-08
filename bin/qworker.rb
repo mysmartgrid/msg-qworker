@@ -33,6 +33,7 @@ require 'timeout'
 require 'optparse'
 require 'ostruct'
 require 'mail.rb'
+require 'rasp-image.rb'
 
 ###
 ## Commandline parser
@@ -160,6 +161,9 @@ loop do
             to, msg = Msg_mail::extract_mail_payload(body['payload'])
 	    Msg_mail::send_mail(to, msg)
 	    exec "true"
+          when "rasp-image"
+            Msg_rasp_image::make_image(body['payload'])
+            exec "true"
           else
             puts "Unknown job type: #{job_type} - ignoring job."
           end

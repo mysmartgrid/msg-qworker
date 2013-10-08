@@ -32,7 +32,7 @@ require 'uuid'                # gem install uuid
 require 'optparse'
 require 'ostruct'
 require 'mail.rb'
-
+require 'rasp-image.rb'
 
 ###
 ## Commandline parser
@@ -57,7 +57,7 @@ class Optparser
       opts.on("-c", "--config FILE", "The file where the configuration lives.") do |file|
         options.config_file = file
       end
-      opts.on("-a", "--algorithm TYPE ", "The algorithm to execute, 'drunken_sailor', 'sleep' or 'mail'.") do |type|
+      opts.on("-a", "--algorithm TYPE ", "The algorithm to execute, 'drunken_sailor', 'sleep', 'mail', or 'rasp-image'.") do |type|
         options.alg_type = type
       end
       opts.on("-p", "--payload STRING ", "Payload depending on algorithm") do |pl|
@@ -83,7 +83,7 @@ end
 #
 options = Optparser.parse(ARGV)
 $verbose = options.verbose
-if (options.alg_type != "drunken_sailor" and options.alg_type != "sleep" and options.alg_type != "mail")
+if (options.alg_type != "drunken_sailor" and options.alg_type != "sleep" and options.alg_type != "mail" and options.alg_type != "rasp-image")
   puts "Please provide a valid algorithm type... (-h for details)."
   exit(-1);
 end
@@ -104,6 +104,10 @@ else
 end
 if (options.alg_type == "mail" and !options.payload)
   puts "Please specify a payload for algorithm 'mail'"
+  exit(-4)
+end
+if (options.alg_type == "rasp-image" and !options.payload)
+  puts "Please specify a payload for algorithm 'rasp-image'"
   exit(-4)
 end
 
