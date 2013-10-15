@@ -73,16 +73,16 @@ fi
 dir=`mktemp -d`
 mkdir -p ${basedir}/${target_file}
 
-cp "$template_file" "${basedir}/${target_file}/rasp-image.img"
+cp "$template_file" "${basedir}/${target_file}/hexabus-base-image.img"
 
-sudo /usr/local/bin/rasp_mkimage_root.sh target=${basedir}/${target_file}/rasp-image.img mountpoint=${dir} ip=${ip} netmask=${netmask} gateway=${gateway}
+sudo /usr/local/bin/rasp_mkimage_root.sh target=${basedir}/${target_file}/hexabus-base-image.img mountpoint=${dir} ip=${ip} netmask=${netmask} gateway=${gateway}
 rmdir "$dir"
 cd ${target_file}
-zip -r ${target_file}.zip rasp-image.img 
+zip -r ${target_file}.zip hexabus-base-image.img
 echo rsync
-scp -vp ${target_file}.zip www-data@dev3.mysmartgrid.de:/var/tmpdata/rasp-images
+scp -vp ${target_file}.zip www-data@dev2.mysmartgrid.de:/var/tmpdata/rasp-images
 touch ${target_file}.done
-scp -vp ${target_file}.done www-data@dev3.mysmartgrid.de:/var/tmpdata/rasp-images
+scp -vp ${target_file}.done www-data@dev2.mysmartgrid.de:/var/tmpdata/rasp-images
 echo rsync done `date`
 cd ..
 rm -rf ${target_file}
