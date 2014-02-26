@@ -73,7 +73,7 @@ class Msg_mail
           puts "Unexptected input: " + tag[0] + " -> Ignoring"
         end
     end
-    msg = header + "\nFrom: " + from + "\nSubject: " + subject + "\n\n" + body
+    msg = header + "\nFrom: " + from + "\nSubject: " + "=?UTF-8?B?" + Base64.strict_encode64(subject) + "?=" + "\n\n" + body
     return to, msg
   end
 end
